@@ -6,7 +6,7 @@ screen = pygame.display.set_mode((1280, 720))
 fps = 60
 clock = pygame.time.Clock()
 running = True
-icon = pygame.image.load("logo.png")
+icon = pygame.image.load("logo.png") #logo
 pygame.display.set_icon(icon)
 
 
