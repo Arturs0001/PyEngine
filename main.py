@@ -5,6 +5,7 @@ pygame.init()
 screen = pygame.display.set_mode((720, 640))
 clock = pygame.time.Clock()
 fps = 60
+build = 'v1.0.2'
 
 icon = pygame.image.load("logo.png")
 pygame.display.set_icon(icon)
@@ -75,6 +76,7 @@ while running:
         button.draw(screen)
     settings_button.draw(screen)
     screen.blit(pygame.transform.scale(icon, (48, 48)), (10, 586))
+    pygame.display.set_caption(f"PyEngine | FPS: {int(clock.get_fps())} | Build: {(build)}")
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
