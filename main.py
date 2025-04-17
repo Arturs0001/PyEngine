@@ -1,83 +1,87 @@
-import time
 import pygame
+import time
 
 pygame.init()
 screen = pygame.display.set_mode((720, 640))
-fps = 60
 clock = pygame.time.Clock()
-icon = pygame.image.load("logo.png")  
+fps = 60
+
+icon = pygame.image.load("logo.png")
 pygame.display.set_icon(icon)
-font = pygame.font.SysFont("Arial", 24)
+pygame.display.set_caption("PyEngine")
+
+font = pygame.font.SysFont("Arial", 28)
 
 WHITE = (255, 255, 255)
-GRAY = (180, 180, 180)
-DARKGRAY = (60, 60, 60)
-LIGHTGRAY = (200, 200, 200)
+LIGHT_GRAY = (180, 180, 180)
+DARK_GRAY = (50, 50, 50)
+BG_COLOR = (30, 30, 30)
 GREEN = (0, 200, 0)
 
-screen_width, screen_height = screen.get_size()
-left_panel_width = int(screen_width * 0.3)
-right_panel_width = screen_width - left_panel_width
-bottom_panel_height = int(screen_height * 0.1)
+left_panel = pygame.Rect(0, 0, 216, 576)
+right_panel = pygame.Rect(216, 0, 504, 576)
+bottom_panel = pygame.Rect(0, 576, 720, 64)
 
-def draw_button(screen, rect, text, callback=None):
-    mouse_pos = pygame.mouse.get_pos()
-    mouse_click = pygame.mouse.get_pressed()
+class Button:
+    def __init__(self, rect, text, callback):
+        self.rect = rect
+        self.text = text
+        self.callback = callback
+        self.hovered = False
 
-    color = GREEN
-    if rect.collidepoint(mouse_pos):
-        color = GRAY
-        if mouse_click[0]:
-            color = DARKGRAY
-            if callback:
-                callback()
+    def draw(self, screen):
+        mouse_pos = pygame.mouse.get_pos()
+        self.hovered = self.rect.collidepoint(mouse_pos)
+        color = DARK_GRAY if self.hovered else GREEN
+        pygame.draw.rect(screen, color, self.rect)
 
-    pygame.draw.rect(screen, color, rect)
-    text_surface = font.render(text, True, WHITE)
-    text_rect = text_surface.get_rect(center=rect.center)
-    screen.blit(text_surface, text_rect)
+        text_surface = font.render(self.text, True, WHITE)
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        screen.blit(text_surface, text_rect)
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.hovered and event.button == 1:
+                self.callback()
 
 def create_project():
-    print("Create Project...")
+    print("Creating project...")
     time.sleep(0.1)
 
 def open_project():
-    print("Open Project...")
+    print("Opening project...")
     time.sleep(0.1)
 
-def open_settings():
-    print("Open Settings...")
+def settings():
+    print("Settings opened.")
     time.sleep(0.1)
+
+buttons = [
+    Button(pygame.Rect(250, 150, 220, 60), "Create Project", create_project),
+    Button(pygame.Rect(250, 230, 220, 60), "Open Project", open_project),
+]
+
+settings_button = Button(pygame.Rect(10, 586, 48, 48), "", settings)
 
 running = True
-
-create_btn_rect = pygame.Rect(left_panel_width + 40, 200, 200, 50)
-open_btn_rect = pygame.Rect(left_panel_width + 40, 270, 200, 50)
-
-settings_btn_rect = pygame.Rect(10, screen_height - bottom_panel_height + 10, 40, 40)
-
 while running:
-    screen.fill(LIGHTGRAY)
+    screen.fill(BG_COLOR)
+    pygame.draw.rect(screen, DARK_GRAY, left_panel)
+    pygame.draw.rect(screen, LIGHT_GRAY, right_panel)
+    pygame.draw.rect(screen, DARK_GRAY, bottom_panel)
 
-    left_panel = pygame.Rect(0, 0, left_panel_width, screen_height - bottom_panel_height)
-    pygame.draw.rect(screen, DARKGRAY, left_panel)
-
-    right_panel = pygame.Rect(left_panel_width, 0, right_panel_width, screen_height - bottom_panel_height)
-    pygame.draw.rect(screen, GRAY, right_panel)
-
-    bottom_panel = pygame.Rect(0, screen_height - bottom_panel_height, screen_width, bottom_panel_height)
-    pygame.draw.rect(screen, DARKGRAY, bottom_panel)
-
-    draw_button(screen, create_btn_rect, "Create Project", create_project)
-    draw_button(screen, open_btn_rect, "Open Project", open_project)
-
-    draw_button(screen, settings_btn_rect, "⚙", open_settings)
+    # Draw buttons
+    for button in buttons:
+        button.draw(screen)
+    settings_button.draw(screen)
+    screen.blit(pygame.transform.scale(icon, (48, 48)), (10, 586))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        for button in buttons + [settings_button]:
+            button.handle_event(event)
 
-    pygame.display.set_caption(f"PyEngine | FPS: {int(clock.get_fps())}")
     pygame.display.flip()
     clock.tick(fps)
 
