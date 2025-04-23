@@ -1,14 +1,16 @@
 import pygame
 import time
+import webbrowser
 
 pygame.init()
 screen = pygame.display.set_mode((640, 580))
 clock = pygame.time.Clock()
 fps = 60
-build = 'v1.0.4'
+build = 'v1.0.5'
 
 icon = pygame.image.load("images/logo.png")
 github_icon = pygame.image.load('images/github_logo.png')
+discord_icon = pygame.image.load('images/discord_logo.png')
 pygame.display.set_icon(icon)
 pygame.display.set_caption("PyEngine")
 
@@ -59,6 +61,7 @@ def settings():
     time.sleep(0.1)
 
 def github():
+    webbrowser.open("https://github.com/Arturs0001/PyEngine")
     print('Github opened')
     time.sleep(0.1)
 
@@ -87,6 +90,7 @@ while running:
     settings_button.draw(screen)
     screen.blit(pygame.transform.scale(icon, (48, 48)), (10, 520))
     screen.blit(pygame.transform.scale(github_icon, (48, 48)), (250, 310))
+    screen.blit(pygame.transform.scale(discord_icon, (48, 48)), (330, 310))
     pygame.display.set_caption(f"PyEngine | FPS: {int(clock.get_fps())} | Build: {(build)}")
 
     for event in pygame.event.get():
