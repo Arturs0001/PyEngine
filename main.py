@@ -2,10 +2,10 @@ import pygame
 import time
 
 pygame.init()
-screen = pygame.display.set_mode((720, 640))
+screen = pygame.display.set_mode((640, 580))
 clock = pygame.time.Clock()
 fps = 60
-build = 'v1.0.2'
+build = 'v1.0.3'
 
 icon = pygame.image.load("logo.png")
 pygame.display.set_icon(icon)
@@ -14,14 +14,14 @@ pygame.display.set_caption("PyEngine")
 font = pygame.font.SysFont("Arial", 28)
 
 WHITE = (255, 255, 255)
-LIGHT_GRAY = (180, 180, 180)
+LIGHT_GRAY = (150, 150, 150)
 DARK_GRAY = (50, 50, 50)
-BG_COLOR = (30, 30, 30)
-GREEN = (0, 200, 0)
+BG_COLOR = (39, 49, 46)
+GREEN = (39, 49, 46)
 
-left_panel = pygame.Rect(0, 0, 216, 576)
-right_panel = pygame.Rect(216, 0, 504, 576)
-bottom_panel = pygame.Rect(0, 576, 720, 64)
+left_panel = pygame.Rect(0, 0, 216, 800)
+right_panel = pygame.Rect(216, 0, 504, 800)
+
 
 class Button:
     def __init__(self, rect, text, callback):
@@ -62,20 +62,19 @@ buttons = [
     Button(pygame.Rect(250, 230, 220, 60), "Open Project", open_project),
 ]
 
-settings_button = Button(pygame.Rect(10, 586, 48, 48), "", settings)
+settings_button = Button(pygame.Rect(10, 520, 48, 48), "", settings)
 
 running = True
 while running:
     screen.fill(BG_COLOR)
     pygame.draw.rect(screen, DARK_GRAY, left_panel)
     pygame.draw.rect(screen, LIGHT_GRAY, right_panel)
-    pygame.draw.rect(screen, DARK_GRAY, bottom_panel)
 
-    # Draw buttons
+
     for button in buttons:
         button.draw(screen)
     settings_button.draw(screen)
-    screen.blit(pygame.transform.scale(icon, (48, 48)), (10, 586))
+    screen.blit(pygame.transform.scale(icon, (48, 48)), (10, 520))
     pygame.display.set_caption(f"PyEngine | FPS: {int(clock.get_fps())} | Build: {(build)}")
 
     for event in pygame.event.get():
