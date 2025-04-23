@@ -5,9 +5,10 @@ pygame.init()
 screen = pygame.display.set_mode((640, 580))
 clock = pygame.time.Clock()
 fps = 60
-build = 'v1.0.3'
+build = 'v1.0.4'
 
-icon = pygame.image.load("logo.png")
+icon = pygame.image.load("images/logo.png")
+github_icon = pygame.image.load('images/github_logo.png')
 pygame.display.set_icon(icon)
 pygame.display.set_caption("PyEngine")
 
@@ -19,8 +20,8 @@ DARK_GRAY = (50, 50, 50)
 BG_COLOR = (39, 49, 46)
 GREEN = (39, 49, 46)
 
-left_panel = pygame.Rect(0, 0, 216, 800)
-right_panel = pygame.Rect(216, 0, 504, 800)
+left_panel = pygame.Rect(0, 0, 216, 580)
+right_panel = pygame.Rect(216, 0, 504, 580)
 
 
 class Button:
@@ -46,20 +47,30 @@ class Button:
                 self.callback()
 
 def create_project():
-    print("Creating project...")
+    print("Creating project")
     time.sleep(0.1)
 
 def open_project():
-    print("Opening project...")
+    print("Opening project")
     time.sleep(0.1)
 
 def settings():
-    print("Settings opened.")
+    print("Settings opened")
+    time.sleep(0.1)
+
+def github():
+    print('Github opened')
+    time.sleep(0.1)
+
+def discord():
+    print('Discord opened')
     time.sleep(0.1)
 
 buttons = [
     Button(pygame.Rect(250, 150, 220, 60), "Create Project", create_project),
     Button(pygame.Rect(250, 230, 220, 60), "Open Project", open_project),
+    Button(pygame.Rect(250, 310, 48, 48), "", github),
+    Button(pygame.Rect(330, 310, 48, 48), "", discord),
 ]
 
 settings_button = Button(pygame.Rect(10, 520, 48, 48), "", settings)
@@ -75,6 +86,7 @@ while running:
         button.draw(screen)
     settings_button.draw(screen)
     screen.blit(pygame.transform.scale(icon, (48, 48)), (10, 520))
+    screen.blit(pygame.transform.scale(github_icon, (48, 48)), (250, 310))
     pygame.display.set_caption(f"PyEngine | FPS: {int(clock.get_fps())} | Build: {(build)}")
 
     for event in pygame.event.get():
