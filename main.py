@@ -6,7 +6,8 @@ pygame.init()
 screen = pygame.display.set_mode((640, 580))
 clock = pygame.time.Clock()
 fps = 60
-build = 'v1.0.5'
+build = 'v1.0.6'
+tabs_change = 0
 
 icon = pygame.image.load("images/logo.png")
 github_icon = pygame.image.load('images/github_logo.png')
@@ -25,6 +26,9 @@ GREEN = (39, 49, 46)
 left_panel = pygame.Rect(0, 0, 216, 580)
 right_panel = pygame.Rect(216, 0, 504, 580)
 
+def change_tab(tab_id):
+    global tabs_change
+    tabs_change = tab_id
 
 class Button:
     def __init__(self, rect, text, callback):
@@ -39,24 +43,29 @@ class Button:
         color = DARK_GRAY if self.hovered else GREEN
         pygame.draw.rect(screen, color, self.rect)
 
-        text_surface = font.render(self.text, True, WHITE)
-        text_rect = text_surface.get_rect(center=self.rect.center)
-        screen.blit(text_surface, text_rect)
+        if self.text:
+            text_surface = font.render(self.text, True, WHITE)
+            text_rect = text_surface.get_rect(center=self.rect.center)
+            screen.blit(text_surface, text_rect)
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.hovered and event.button == 1:
                 self.callback()
 
+
 def create_project():
+    change_tab(1)
     print("Creating project")
     time.sleep(0.1)
 
 def open_project():
+    change_tab(2)
     print("Opening project")
     time.sleep(0.1)
 
 def settings():
+    change_tab(-1)
     print("Settings opened")
     time.sleep(0.1)
 
@@ -66,8 +75,10 @@ def github():
     time.sleep(0.1)
 
 def discord():
+    webbrowser.open("https://discord.com")
     print('Discord opened')
     time.sleep(0.1)
+
 
 buttons = [
     Button(pygame.Rect(250, 150, 220, 60), "Create Project", create_project),
@@ -78,20 +89,12 @@ buttons = [
 
 settings_button = Button(pygame.Rect(10, 520, 48, 48), "", settings)
 
+
 running = True
 while running:
     screen.fill(BG_COLOR)
     pygame.draw.rect(screen, DARK_GRAY, left_panel)
     pygame.draw.rect(screen, LIGHT_GRAY, right_panel)
-
-
-    for button in buttons:
-        button.draw(screen)
-    settings_button.draw(screen)
-    screen.blit(pygame.transform.scale(icon, (48, 48)), (10, 520))
-    screen.blit(pygame.transform.scale(github_icon, (48, 48)), (250, 310))
-    screen.blit(pygame.transform.scale(discord_icon, (48, 48)), (330, 310))
-    pygame.display.set_caption(f"PyEngine | FPS: {int(clock.get_fps())} | Build: {(build)}")
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -99,6 +102,24 @@ while running:
         for button in buttons + [settings_button]:
             button.handle_event(event)
 
+    if tabs_change == 0:
+        for button in buttons:
+            button.draw(screen)
+        settings_button.draw(screen)
+        screen.blit(pygame.transform.scale(icon, (48, 48)), (10, 520))
+        screen.blit(pygame.transform.scale(github_icon, (48, 48)), (250, 310))
+        screen.blit(pygame.transform.scale(discord_icon, (48, 48)), (330, 310))
+    elif tabs_change == 1:
+        draw_text = font.render("Create Project Page", True, WHITE)
+        screen.blit(draw_text, (240, 200))
+    elif tabs_change == 2:
+        draw_text = font.render("Open Project Page", True, WHITE)
+        screen.blit(draw_text, (240, 200))
+    elif tabs_change == -1:
+        draw_text = font.render("Settings Page", True, WHITE)
+        screen.blit(draw_text, (240, 200))
+
+    pygame.display.set_caption(f"PyEngine | FPS: {int(clock.get_fps())} | Build: {build}")
     pygame.display.flip()
     clock.tick(fps)
 
